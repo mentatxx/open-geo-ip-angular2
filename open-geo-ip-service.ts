@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { URLSearchParams, Headers, Http } from '@angular/http';
 import { Observable, Subject } from 'rxjs';
 
 export const OPEN_GEO_IP_GET_URL = 'https://www.open-geo-ip.com/api/v1.0/ip_addresses/self';
-export const OPEN_GEO_IP_POST_URL = 'https://www.open-geo-ip.com/api/v1.0/ip_addresses/self';
+export const OPEN_GEO_IP_POST_URL = 'https://www.open-geo-ip.com/home/register_ip.json';
 
 export interface GeoIpLocation {
     ip: string;
@@ -44,12 +44,20 @@ export class OpenGeoIp {
     }
 
     private sendLocationToServer(data: GeoLocationPost) {
+        // thats weird - it uses GET query and works with JSONP
         let headers = new Headers({
             'Content-Type': 'application/json'
         });
+        let search: URLSearchParams = new URLSearchParams();
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+                search.set(key, data[key]);
+            }
+        }
+        search.set('_', String(Number(new Date())));
+
         return this.http
-            .post(OPEN_GEO_IP_POST_URL, JSON.stringify(data), {headers})
-            .map((res) => res.json());
+            .get(OPEN_GEO_IP_POST_URL, {headers, search});
     }
 
     private askUserForLocation(permissionWaitingTimeout: number): Observable<GeoIpLocation> {
