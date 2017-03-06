@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject } from 'rxjs';
 
 export const OPEN_GEO_IP_GET_URL = 'https://www.open-geo-ip.com/api/v1.0/ip_addresses/self';
 export const OPEN_GEO_IP_POST_URL = 'https://www.open-geo-ip.com/api/v1.0/ip_addresses/self';
@@ -40,7 +40,7 @@ export class OpenGeoIp {
         });
         return this.http
             .get(OPEN_GEO_IP_GET_URL, {headers})
-            .map((res) => res.json())
+            .map((res) => res.json());
     }
 
     private sendLocationToServer(data: GeoLocationPost) {
@@ -49,25 +49,25 @@ export class OpenGeoIp {
         });
         return this.http
             .post(OPEN_GEO_IP_POST_URL, JSON.stringify(data), {headers})
-            .map((res) => res.json())
+            .map((res) => res.json());
     }
 
     private askUserForLocation(permissionWaitingTimeout: number): Observable<GeoIpLocation> {
-        function getLocationAndServeToTheSubject() {
-            this.getLocationFromServer()
-                .subscribe((data: GeoIpLocation) => subject.next(data));
-        }
-
         const subject = new Subject<GeoIpLocation>();
 
-        const geolocation_options = {
+        const getLocationAndServeToTheSubject = () => {
+            this.getLocationFromServer()
+                .subscribe((data: GeoIpLocation) => subject.next(data));
+        };
+
+        const geolocationOptions = {
             enableHighAccuracy: true,
             maximumAge: 0
         };
 
         let timeoutId = window.setTimeout(getLocationAndServeToTheSubject, permissionWaitingTimeout);
 
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition((position) => {
                 clearTimeout(timeoutId);
                 const data: GeoLocationPost = {
                     latitude: position.coords.latitude,
@@ -76,11 +76,11 @@ export class OpenGeoIp {
                 };
                 this.sendLocationToServer(data)
                     .subscribe(getLocationAndServeToTheSubject, getLocationAndServeToTheSubject);
-            }, function() {
+            }, () => {
                 clearTimeout(timeoutId);
                 getLocationAndServeToTheSubject();
             },
-            geolocation_options
+            geolocationOptions
         );
 
         return subject.asObservable();
