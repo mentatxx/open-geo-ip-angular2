@@ -25,8 +25,8 @@ export class OpenGeoIp {
     constructor(private http: Http) {
     }
 
-    public getLocation(askForLocation: boolean = true,
-                       permissionWaitingTimeout: number = 10000): Observable<GeoIpLocation> {
+    public getLocation(askForLocation = true,
+                       permissionWaitingTimeout = 10000): Observable<GeoIpLocation> {
         if (askForLocation && navigator.geolocation) {
             return this.askUserForLocation(permissionWaitingTimeout);
         } else {

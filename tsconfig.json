@@ -5,19 +5,21 @@
     "target": "ES5",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowUnusedLabels": false,
+    "noImplicitReturns": true,
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "outDir": "./dist",
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
-  "files": [
-    "open-geo-ip-module.ts"
-  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist",
+    "**/*.spec.ts"
   ],
-  "typeRoots": [
-    "../node_modules/@types"
-  ],
-  "types": [
-    "core-js"
-  ]
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true
+  }
 }
