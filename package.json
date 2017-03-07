@@ -2,7 +2,7 @@
   "name": "open-geo-ip-angular2",
   "version": "1.0.0",
   "description": "Angular2 library for OpenGeoIP",
-  "main": "index.js",
+  "main": "open-geo-ip-module.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "tsc"
